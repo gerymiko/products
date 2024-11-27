@@ -21,8 +21,8 @@ import (
 // @Accept       json
 // @Produce      json
 // @Param        user  body      models.User  true  "User Data"
-// @Success      201   {object}  map[string]string
-// @Failure      400   {object}  map[string]string
+// @Success      201   	body			models.ResponseUser
+// @Failure      400   	body			models.ResponseUser
 // @Router       /register [post]
 func RegisterHandler(db *mongo.Client) gin.HandlerFunc {
 	return func(c *gin.Context) {
@@ -62,9 +62,9 @@ func RegisterHandler(db *mongo.Client) gin.HandlerFunc {
 // @Accept       json
 // @Produce      json
 // @Param        loginData  body      models.User  true  "Login Data"
-// @Success      200        {object}  map[string]string
-// @Failure      400        {object}  map[string]string
-// @Failure      401        {object}  map[string]string
+// @Success      200        {object}  models.ResponseUser
+// @Failure      400        {object}  models.ResponseUser
+// @Failure      401        {object}  models.ResponseUser
 // @Router       /login [post]
 func LoginHandler(db *mongo.Client, jwtSecret []byte) gin.HandlerFunc {
 	return func(c *gin.Context) {
