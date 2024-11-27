@@ -4,19 +4,19 @@ This project is a simple API built with Golang, featuring JWT-based authenticati
 
 ## Features
 
-1. User Authentication: Login and register functionality using JWT.
-2. MongoDB Integration: Data is stored in a MongoDB database.
-3. Swagger Documentation: Easily explore and test API endpoints.
-4. Gin Framework: Lightweight and fast HTTP framework.
-5. Modular Design: Clean separation of concerns for better maintainability.
+- User Authentication: Login and register functionality using JWT.
+- MongoDB Integration: Data is stored in a MongoDB database.
+- Swagger Documentation: Easily explore and test API endpoints.
+- Gin Framework: Lightweight and fast HTTP framework.
+- Modular Design: Clean separation of concerns for better maintainability.
 
 ## Installation
 
 ### Prerequisites
 
-Go (v1.23.3)
-MongoDB (running locally or on a server)
-Swagger CLI (for generating documentation)
+- Go (v1.23.3)
+- MongoDB (running locally or on a server)
+- Swagger CLI (for generating documentation)
 
 ### Clone the Repository
 
@@ -74,13 +74,65 @@ http://localhost:8080/swagger/index.html
 
 #### Authentication
 
-| Method | Endpoint | Description |
-| POST | | /register | Register a new user |
-| POST | /login | Login and get a JWT |
+| Method | Endpoint  | Description         |
+| ------ | --------- | ------------------- |
+| POST   | /register | Register a new user |
+| POST   | /login    | Login and get a JWT |
 
 #### Items
 
-| Method | Endpoint | Description |
-| GET | /items | Get a list of all items |
-| GET | /items/{id} | Get details of a specific item |
-| POST | /items | Add new item |
+| Method | Endpoint    | Description                    |
+| ------ | ----------- | ------------------------------ |
+| GET    | /items      | Get a list of all items        |
+| GET    | /items/{id} | Get details of a specific item |
+| POST   | /items      | Add new item                   |
+
+## Development
+
+### Generate Swagger Documentation
+
+After making changes to the handlers, regenerate the Swagger documentation:
+
+```bash
+swag init
+```
+
+### Project Structure
+
+```bash
+/products
+  ├── main.go                # Entry point of the application
+  ├── config/
+  │   └── database.go        # MongoDB configuration
+  ├── docs/                  # Auto-generated Swagger files
+  ├── handlers/
+  │   ├── auth.go            # Authentication handlers
+  │   ├── items.go           # Item-related handlers
+  ├── models/
+  │   ├── user.go            # User model
+  │   ├── item.go            # Item model
+  ├── middlewares/
+  │   └── auth.go            # JWT middleware
+  ├── .env                   # Environment variables
+  └── go.mod                 # Go modules
+```
+
+## Testing
+
+Use tools like Postman or cURL to test the endpoints. For example:
+
+### Register a New User
+
+```bash
+curl -X POST http://localhost:8080/register \
+-H "Content-Type: application/json" \
+-d '{"username":"testuser","password":"testpass"}'
+```
+
+### Login
+```bash
+curl -X POST http://localhost:8080/login \
+-H "Content-Type: application/json" \
+-H "Authorization: Bearer $TOKEN" \
+-d '{"username":"testuser","password":"testpass"}'
+```
