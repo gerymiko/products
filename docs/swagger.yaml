@@ -9,6 +9,15 @@ definitions:
       price:
         type: integer
     type: object
+  models.ResponseUser:
+    properties:
+      message:
+        type: string
+      status:
+        type: string
+      token omitempty:
+        type: string
+    type: object
   models.User:
     properties:
       id:
@@ -94,7 +103,7 @@ paths:
             additionalProperties:
               type: string
             type: object
-      summary: Get Item
+      summary: Get Item by ID
       tags:
       - Items
   /login:
@@ -115,21 +124,15 @@ paths:
         "200":
           description: OK
           schema:
-            additionalProperties:
-              type: string
-            type: object
+            $ref: '#/definitions/models.ResponseUser'
         "400":
           description: Bad Request
           schema:
-            additionalProperties:
-              type: string
-            type: object
+            $ref: '#/definitions/models.ResponseUser'
         "401":
           description: Unauthorized
           schema:
-            additionalProperties:
-              type: string
-            type: object
+            $ref: '#/definitions/models.ResponseUser'
       summary: Login
       tags:
       - Auth
@@ -151,15 +154,11 @@ paths:
         "201":
           description: Created
           schema:
-            additionalProperties:
-              type: string
-            type: object
+            type: body
         "400":
           description: Bad Request
           schema:
-            additionalProperties:
-              type: string
-            type: object
+            type: body
       summary: Register
       tags:
       - Auth
