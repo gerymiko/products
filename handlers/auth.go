@@ -28,7 +28,10 @@ func RegisterHandler(db *mongo.Client) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var user models.User
 		if err := c.ShouldBindJSON(&user); err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			c.JSON(http.StatusBadRequest, models.ResponseUser{
+				Status:  "error",
+				Message: err.Error(),
+			})
 			return
 		}
 
@@ -38,11 +41,17 @@ func RegisterHandler(db *mongo.Client) gin.HandlerFunc {
 		collection := db.Database("products").Collection("users")
 		_, err := collection.InsertOne(context.Background(), user)
 		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": "Could not register user"})
+			c.JSON(http.StatusInternalServerError, models.ResponseUser{
+				Status:  "error",
+				Message: "Could not register user",
+			})
 			return
 		}
 
-		c.JSON(http.StatusCreated, gin.H{"message": "User registered successfully"})
+		c.JSON(http.StatusCreated, models.ResponseUser{
+			Status:  "success",
+			Message: "User registered successfully",
+		})
 	}
 }
 
@@ -65,7 +74,10 @@ func LoginHandler(db *mongo.Client, jwtSecret []byte) gin.HandlerFunc {
 		}
 
 		if err := c.ShouldBindJSON(&loginData); err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			c.JSON(http.StatusBadRequest, models.ResponseUser{
+				Status:  "error",
+				Message: err.Error(),
+			})
 			return
 		}
 
@@ -73,7 +85,10 @@ func LoginHandler(db *mongo.Client, jwtSecret []byte) gin.HandlerFunc {
 		var user models.User
 		err := collection.FindOne(context.Background(), bson.M{"username": loginData.Username}).Decode(&user)
 		if err != nil || bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(loginData.Password)) != nil {
-			c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid username or password"})
+			c.JSON(http.StatusUnauthorized, models.ResponseUser{
+				Status:  "error",
+				Message: "Invalid username or password",
+			})
 			return
 		}
 
@@ -83,10 +98,17 @@ func LoginHandler(db *mongo.Client, jwtSecret []byte) gin.HandlerFunc {
 		})
 		tokenString, err := token.SignedString(jwtSecret)
 		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": "Could not generate token"})
+			c.JSON(http.StatusInternalServerError, models.ResponseUser{
+				Status:  "error",
+				Message: "Could not generate token",
+			})
 			return
 		}
 
-		c.JSON(http.StatusOK, gin.H{"token": tokenString})
+		c.JSON(http.StatusOK, models.ResponseUser{
+			Status:  "success",
+			Message: "Login successful",
+			Token:   tokenString,
+		})
 	}
 }
