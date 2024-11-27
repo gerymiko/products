@@ -197,13 +197,13 @@ const docTemplate = `{
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "type": "body"
+                            "$ref": "#/definitions/models.ResponseUser"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "type": "body"
+                            "$ref": "#/definitions/models.ResponseUser"
                         }
                     }
                 }
@@ -234,7 +234,7 @@ const docTemplate = `{
                 "status": {
                     "type": "string"
                 },
-                "token omitempty": {
+                "token": {
                     "type": "string"
                 }
             }
