@@ -21,8 +21,8 @@ import (
 // @Accept       json
 // @Produce      json
 // @Param        user  body      models.User  true  "User Data"
-// @Success      201   	body			models.ResponseUser
-// @Failure      400   	body			models.ResponseUser
+// @Success      201   {object}			models.ResponseUser
+// @Failure      400   {object}			models.ResponseUser
 // @Router       /register [post]
 func RegisterHandler(db *mongo.Client) gin.HandlerFunc {
 	return func(c *gin.Context) {

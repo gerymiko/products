@@ -191,13 +191,13 @@
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "type": "body"
+                            "$ref": "#/definitions/models.ResponseUser"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "type": "body"
+                            "$ref": "#/definitions/models.ResponseUser"
                         }
                     }
                 }
@@ -228,7 +228,7 @@
                 "status": {
                     "type": "string"
                 },
-                "token omitempty": {
+                "token": {
                     "type": "string"
                 }
             }

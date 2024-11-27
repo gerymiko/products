@@ -9,5 +9,5 @@ type User struct {
 type ResponseUser struct {
 	Status  string `json:"status"`
 	Message string `json:"message"`
-	Token   string `json:"token omitempty"`
+	Token   string `json:"token,omitempty"`
 }
