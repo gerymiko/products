@@ -14,8 +14,16 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-var jwtSecret = []byte("your-secret-key")
-
+// RegisterHandler handles user registration
+// @Summary      Register
+// @Description  Register a new user
+// @Tags         Auth
+// @Accept       json
+// @Produce      json
+// @Param        user  body      models.User  true  "User Data"
+// @Success      201   {object}  map[string]string
+// @Failure      400   {object}  map[string]string
+// @Router       /register [post]
 func RegisterHandler(db *mongo.Client) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var user models.User
@@ -27,7 +35,7 @@ func RegisterHandler(db *mongo.Client) gin.HandlerFunc {
 		hash, _ := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
 		user.Password = string(hash)
 
-		collection := db.Database("test").Collection("users")
+		collection := db.Database("products").Collection("users")
 		_, err := collection.InsertOne(context.Background(), user)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "Could not register user"})
@@ -38,7 +46,18 @@ func RegisterHandler(db *mongo.Client) gin.HandlerFunc {
 	}
 }
 
-func LoginHandler(db *mongo.Client) gin.HandlerFunc {
+// LoginHandler handles user login requests
+// @Summary      Login
+// @Description  Login a user and return a JWT token
+// @Tags         Auth
+// @Accept       json
+// @Produce      json
+// @Param        loginData  body      models.User  true  "Login Data"
+// @Success      200        {object}  map[string]string
+// @Failure      400        {object}  map[string]string
+// @Failure      401        {object}  map[string]string
+// @Router       /login [post]
+func LoginHandler(db *mongo.Client, jwtSecret []byte) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var loginData struct {
 			Username string `json:"username"`
@@ -50,7 +69,7 @@ func LoginHandler(db *mongo.Client) gin.HandlerFunc {
 			return
 		}
 
-		collection := db.Database("test").Collection("users")
+		collection := db.Database("products").Collection("users")
 		var user models.User
 		err := collection.FindOne(context.Background(), bson.M{"username": loginData.Username}).Decode(&user)
 		if err != nil || bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(loginData.Password)) != nil {
@@ -62,7 +81,11 @@ func LoginHandler(db *mongo.Client) gin.HandlerFunc {
 			"username": user.Username,
 			"exp":      time.Now().Add(time.Hour * 2).Unix(),
 		})
-		tokenString, _ := token.SignedString(jwtSecret)
+		tokenString, err := token.SignedString(jwtSecret)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Could not generate token"})
+			return
+		}
 
 		c.JSON(http.StatusOK, gin.H{"token": tokenString})
 	}

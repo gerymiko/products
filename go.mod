@@ -1,8 +1,11 @@
 module products
 
-go 1.18
+go 1.23.3
 
-require go.mongodb.org/mongo-driver v1.17.1
+require (
+	github.com/joho/godotenv v1.5.1
+	go.mongodb.org/mongo-driver v1.17.1
+)
 
 require (
 	github.com/bytedance/sonic v1.11.6 // indirect
