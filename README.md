@@ -136,3 +136,7 @@ curl -X POST http://localhost:8080/login \
 -H "Authorization: Bearer $TOKEN" \
 -d '{"username":"testuser","password":"testpass"}'
 ```
+To run unit test just run this code:
+```bash
+go test ./...
+```
